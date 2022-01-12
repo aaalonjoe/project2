@@ -2,12 +2,9 @@
   background-color: #fff;
   color: #fff;
   display: flex;
-  /* flex-direction: column; */
-  /* align-items: center; */
   justify-content: center;
   height: 100vh;
   overflow: hidden;
-  /* margin: 0 auto; */
   position: relative;
 }
 
@@ -21,7 +18,6 @@
 .user-form .logo {
   width: 100%;
   height: 280px;
-  /* background: url(./img/img2.png) no-repeat; */
 }
 .user-form .logo img {
   margin-left: 34%;
@@ -66,15 +62,17 @@
   height: 53px;
   padding: 0 10px;
 }
+
+.user-form .search-img:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
 .user-form .search-img i {
   color: rgb(116, 140, 150);
   font-size: 20px;
   transition: 0.1s;
   opacity: 0.8;
-}
-.user-form .search-img i:hover {
-  transform: scale(1.1);
-  opacity: 1;
 }
 
 .card {
@@ -87,9 +85,6 @@
   padding: 3rem;
   margin-left: 30px;
   height: 350px;
-  
-  
-  /* justify-content: center; */
   margin-top: 450px;
   
 }
@@ -99,6 +94,7 @@
   border: 10px solid #cdd7e4;
   height: 150px;
   width: 150px;
+  cursor: pointer;
 }
 
 .user-info {
@@ -140,29 +136,32 @@
 
 .repos {
   position: absolute;
-  top: 50%;
-  /* border: 1px solid #000; */
+  top: 55%;
   display: block;
   width: 500px;
-  left: -65%;
+  left: -70%;
 }
-.repos span {
-  margin-right: 4.5rem;
-  width: 90px;
-  display: inline-block;
-  font-size: 0.9rem;
+.repos div {
+  margin-bottom: 3rem;
 }
-.repo {
+
+.repos a {
   text-decoration: none;
   color: #fff;
   background-color: hsl(216, 46%, 39%);
   font-size: 0.7rem;
   padding: 0.25rem 0.5rem;
-  margin-right: 5rem;
-  margin-bottom: 1.5rem;
-  margin-top: 20px;
-  margin-left: 1.5rem;
   display: inline-block;
+  margin-right: 2rem;
+}
+.repos span {
+  margin-right: 2rem;
+  width: 30%;
+  display: inline-block;
+  font-size: 0.9rem;
+}
+.repos span.name {
+  width: 35%;
 }
 
 @media (max-width: 500px) {

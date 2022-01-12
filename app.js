@@ -1,12 +1,12 @@
+
+// 메인이미지 클릭시 깃허브로 이동
 const $link = 'https://github.com';
 
 document.querySelector('.logo').addEventListener('click', e => {
     window.open($link);
-    console.log('링크');
 });
 
 const URL = 'https://api.github.com';
-
 
 
 // 프로필 렌더링 함수
@@ -15,7 +15,7 @@ function renderingProfile() {
     const result = fetch(URL + '/users/' + `${userId}`, {
         headers: {
             Authorization: "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"
-        },
+        }
     });
     
 
@@ -25,7 +25,15 @@ function renderingProfile() {
          // 사진
         document.querySelector('.card div:first-child img')
                     .setAttribute('src', user.avatar_url);
-        // 프로필
+        const $img = document.querySelector('.card div:first-child img');
+        const $imgLink = $link + '/' + userId; 
+        $img.setAttribute('href', user.html_url);
+        $img.addEventListener('click', e => {
+            window.open($imgLink);
+        });
+
+
+        // 프로필 렌더링
         document.getElementById('user-id').textContent = user.login;
         document.getElementById('user-name').textContent = user.name;
         document.getElementById('followers').textContent = user.followers;
@@ -33,23 +41,48 @@ function renderingProfile() {
         document.getElementById('public-repos').textContent = user.public_repos;
         });
 
-        const result2 = fetch(URL + '/users/' + `${userId}` + '/repos' ,{
+        const result2 = fetch(URL + '/users/' + `${userId}` + '/repos?sort=update' ,{
             headers: {
                 Authorization: "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"
-            },
+            }
         });
         result2.then(res => res.json())
-    .then(userRepos => {
-        console.log(userRepos);
-        // 저장소 이름
-        document.querySelector('.repo1 a').setAttribute('href', userRepos[0].html_url);
-        document.querySelector('.repo1-name').textContent = userRepos[0].name;
+        .then(userRepos => {
+            
+            // 저장소 링크, 이름, 언어 렌더링
+            document.querySelector('.repo1 a').setAttribute('href', userRepos[0].html_url);
+            document.querySelector('.repo1-name').textContent = userRepos[0].name;
+            repoLang(userId, userRepos[0].name, '.repo1-lang');
 
-        document.querySelector('.repo2 a').setAttribute('href', userRepos[1].html_url);
-        document.querySelector('.repo2-name').textContent = userRepos[1].name;
+            document.querySelector('.repo2 a').setAttribute('href', userRepos[1].html_url);
+            document.querySelector('.repo2-name').textContent = userRepos[1].name;
+            repoLang(userId, userRepos[1].name, '.repo2-lang');
 
-        document.querySelector('.repo3 a').setAttribute('href', userRepos[2].html_url);
-        document.querySelector('.repo3-name').textContent = userRepos[2].name;
+            document.querySelector('.repo3 a').setAttribute('href', userRepos[2].html_url);
+            document.querySelector('.repo3-name').textContent = userRepos[2].name;
+            repoLang(userId, userRepos[2].name, '.repo3-lang');
+
+        });
+
+}
+
+// 위 3개 인수를 매개변수로 받아서
+function repoLang(userId, repoName, repoClass) {
+    // const repoName = "js_study_1";
+    const result3 = fetch(URL + '/repos/' + `${userId}` + '/' + `${repoName}` + '/languages' ,{
+        headers: {
+            Authorization: "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"
+        }
+    });
+
+    // 키를 빈 배열에 담아 렌더링 
+    result3.then(res => res.json()).then(repoLang => {
+    
+        let keyname = [];
+        for(let key in repoLang) {
+            keyname.push(key);
+        }
+        document.querySelector(repoClass).textContent = keyname;
 
     });
 
@@ -60,38 +93,22 @@ function openProfileCard() {
     document.querySelector('.card').style.display = 'flex';
 }
 
-
 // 검색버튼 이벤트
-const $search = document.querySelector('.search-img i');
+const $search = document.querySelector('.search-img');
 $search.addEventListener('click', e => {
     
     const $input = document.querySelector('.search-box input');
+    
     if ($input.value.trim() === '') {
     
         $input.setAttribute('placeholder', '바르게 입력하세요.');
+
     } else {
         openProfileCard();
         renderingProfile();
     }
-    let userId = document.getElementById('search').value;
-    
-    const result = fetch(URL + '/' + `${userId}`);
-    console.log(result);
-    result.then(res => res.json())
-        .then(user => {
-            console.log(user);
-            let keyName = [];
-            for(let key in user) {
-                
-                keyName.push(key)
-            }
-            console.log(keyName);
-        });
 
 });
-
-
-
 
 // 즉시실행 함수
 
