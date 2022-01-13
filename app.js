@@ -16,53 +16,61 @@ function renderingProfile() {
         headers: {
             Authorization: "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"
         }
+
     });
     
 
     result.then(res => res.json())
     .then(user => {
-            
-         // 사진
-        document.querySelector('.card div:first-child img')
-                    .setAttribute('src', user.avatar_url);
-        const $img = document.querySelector('.card div:first-child img');
-        const $imgLink = $link + '/' + userId; 
-        $img.setAttribute('href', user.html_url);
-        $img.addEventListener('click', e => {
+
+        if (user.message === "Not Found") {
+            closeProfileCard();
+            noneProfile();
+        } else {
+            openProfileCard();
+             // 사진
+            document.querySelector('.card div:first-child img')
+            .setAttribute('src', user.avatar_url);
+            const $img = document.querySelector('.card div:first-child img');
+            const $imgLink = $link + '/' + userId; 
+            $img.setAttribute('href', user.html_url);
+            $img.addEventListener('click', e => {
             window.open($imgLink);
-        });
+            });
 
 
-        // 프로필 렌더링
-        document.getElementById('user-id').textContent = user.login;
-        document.getElementById('user-name').textContent = user.name;
-        document.getElementById('followers').textContent = user.followers;
-        document.getElementById('following').textContent = user.following;
-        document.getElementById('public-repos').textContent = user.public_repos;
-        });
+            // 프로필 렌더링
+            document.getElementById('user-id').textContent = user.login;
+            document.getElementById('user-name').textContent = user.name;
+            document.getElementById('followers').textContent = user.followers;
+            document.getElementById('following').textContent = user.following;
+            document.getElementById('public-repos').textContent = user.public_repos;
+        }
+        
+    });
 
-        const result2 = fetch(URL + '/users/' + `${userId}` + '/repos?sort=update' ,{
-            headers: {
-                Authorization: "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"
-            }
-        });
-        result2.then(res => res.json())
+    const result2 = fetch(URL + '/users/' + `${userId}` + '/repos?sort=update' ,{
+        headers: {
+            Authorization: "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"
+        }
+    });
+    result2.then(res => res.json())
         .then(userRepos => {
             
-            // 저장소 링크, 이름, 언어 렌더링
-            document.querySelector('.repo1 a').setAttribute('href', userRepos[0].html_url);
-            document.querySelector('.repo1-name').textContent = userRepos[0].name;
-            repoLang(userId, userRepos[0].name, '.repo1-lang');
+        // 저장소 링크, 이름, 언어 렌더링
+        document.querySelector('.repo1 a').setAttribute('href', userRepos[0].html_url);
+        document.querySelector('.repo1-name').textContent = userRepos[0].name;
+        repoLang(userId, userRepos[0].name, '.repo1-lang');
 
-            document.querySelector('.repo2 a').setAttribute('href', userRepos[1].html_url);
-            document.querySelector('.repo2-name').textContent = userRepos[1].name;
-            repoLang(userId, userRepos[1].name, '.repo2-lang');
+        document.querySelector('.repo2 a').setAttribute('href', userRepos[1].html_url);
+        document.querySelector('.repo2-name').textContent = userRepos[1].name;
+        repoLang(userId, userRepos[1].name, '.repo2-lang');
 
-            document.querySelector('.repo3 a').setAttribute('href', userRepos[2].html_url);
-            document.querySelector('.repo3-name').textContent = userRepos[2].name;
-            repoLang(userId, userRepos[2].name, '.repo3-lang');
+        document.querySelector('.repo3 a').setAttribute('href', userRepos[2].html_url);
+        document.querySelector('.repo3-name').textContent = userRepos[2].name;
+        repoLang(userId, userRepos[2].name, '.repo3-lang');
 
-        });
+    });
 
 }
 
@@ -93,25 +101,50 @@ function openProfileCard() {
     document.querySelector('.card').style.display = 'flex';
 }
 
-// 검색버튼 이벤트
-const $search = document.querySelector('.search-img');
-$search.addEventListener('click', e => {
-    
-    const $input = document.querySelector('.search-box input');
-    
-    if ($input.value.trim() === '') {
-    
-        $input.setAttribute('placeholder', '바르게 입력하세요.');
+function closeProfileCard() {
+    document.querySelector('.card').style.display = 'none';
+}
 
-    } else {
-        openProfileCard();
-        renderingProfile();
-    }
+function noneProfile() {
+    document.querySelector('.nonecard').style.display = 'flex';
+}
 
-});
+function enterEvent() {
+
+    const $enter = document.getElementById('search');
+    $enter.addEventListener('keyup', e => {
+        if (e.keyCode === 13) {
+            console.log('엔터!');
+            const $input = document.querySelector('.search-box input');
+            if ($input.value.trim() === '') {    
+                $input.setAttribute('placeholder', '바르게 입력하세요.');
+            } else {
+                renderingProfile();
+            }
+        }
+    });
+}
 
 // 즉시실행 함수
 
 (function() {
+
+    // 검색버튼 이벤트
+    const $search = document.querySelector('.search-img');
+    enterEvent();
+    $search.addEventListener('click', e => {
+        e.preventDefault();
+        
+    const $input = document.querySelector('.search-box input');
+    if ($input.value.trim() === '') {    
+        $input.setAttribute('placeholder', '바르게 입력하세요.');
+    } else {
+        renderingProfile();
+    }
+
+    
+
+});
+
 
 })();
